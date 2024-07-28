@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Table,
@@ -8,22 +8,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import axios from "axios";
-import { weight } from "../../data.json";
-// import { data } from "@/data";
 
-export const DataTable = async () => {
+
+export const DataTable =  () => {
+  const [weight, setWeight] =useState([]);
   const navigate = useNavigate();
-  const response = await axios("http://localhost:3000/weight");
-  // const datas = response.data.restaurants;
-  // console.log(datas)
-  const data = weight.weights;
+  useEffect(() => {
+    fetch("http://localhost:3000/weights")
+      .then((res) => {
+
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data)
+        setWeight(data);
+      })
+      .catch((err) => {
+        if (err.name === "AbortError") {
+          console.log("fetch aborted.");
+        }
+      });
+  }, []);
+
+  // console.log(weight)
+
   return (
-    //   <>{data.map((data) =>
-    //   <h1>{data.date}</h1>
-    // )}</>
     <Table>
-      {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
       <TableHeader>
         <TableRow className="bg-gray-100">
           <TableHead className="text-center">Tanggal</TableHead>
@@ -33,24 +43,24 @@ export const DataTable = async () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.map((data:any) => {
+        {weight?.map((weight:any) => {
           return (
             <TableRow
-              key={data.date}
-              onClick={() => navigate(`/detail/${data?.date}`)}
+              key={weight.date}
+              onClick={() => navigate(`/detail/${weight?.date}`)}
             >
               <TableCell className="font-medium text-left border-b">
-                {data.date}
+                {weight.date}
               </TableCell>
               <TableCell className="text-left border-b">
-                {data.max_weight}
+                {weight.max_weight}
               </TableCell>
               <TableCell className="text-left border-b">
                 {" "}
-                {data.min_weight}
+                {weight.min_weight}
               </TableCell>
               <TableCell className="text-right border-b">
-                {data.max_weight - data.min_weight}
+                {weight.max_weight - weight.min_weight}
               </TableCell>
             </TableRow>
           );
