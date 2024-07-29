@@ -24,20 +24,17 @@ type WeightAverage = {
 };
 
 type WeightResponse = {
-  weight: Weight;
+  weights: Array<Weight>;
   average: WeightAverage;
 };
 
 export const DataTable = () => {
-  const [weight, setWeight] = useState<Array<Weight>>([]);
-  const [average, setAverage] = useState<Array<Weight>>([]);
+  const [weight, setWeight] = useState<WeightResponse>();
   const fetchApi = async () => {
     const response = await axios("http://127.0.0.1:3000/api/v1/weight/");
     if (!response) return;
-    const resWeight = response?.data?.body?.weight;
-    const resAverage = response?.data?.body?.average;
+    const resWeight = response?.data?.body;
     setWeight(resWeight);
-    setAverage(resAverage);
   };
   useEffect(() => {
     fetchApi();
@@ -74,28 +71,23 @@ export const DataTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {weight?.map((weight: Weight) => {
+          {weight?.weights?.map((weight: Weight) => {
+            console.log("=>", weight?.date);
             return (
               <TableRow
                 key={weight.date}
                 onClick={() => {
                   navigate(`/detail/${weight?.date}`);
                 }}
+                className="text-center border-b"
               >
-                <TableCell className="font-medium text-left border-b">
+                <TableCell className="font-medium ">
                   {format(new Date(weight.date), "yyyy-MM-dd")}
                 </TableCell>
-                <TableCell className="text-left border-b">
-                  {weight.max}
-                </TableCell>
-                <TableCell className="text-left border-b">
-                  {" "}
-                  {weight.min}
-                </TableCell>
-                <TableCell className="text-right border-b">
-                  {weight.differance}
-                </TableCell>
-                <TableCell className="text-right border-b">
+                <TableCell className="">{weight.max}</TableCell>
+                <TableCell className=""> {weight.min}</TableCell>
+                <TableCell className="">{weight.differance}</TableCell>
+                <TableCell className="">
                   <button
                     className="py-1 px-4 bg-red-600 text-white"
                     onClick={(e) => {
@@ -109,7 +101,12 @@ export const DataTable = () => {
               </TableRow>
             );
           })}
-         
+          <TableRow className="text-center">
+            <TableCell>average</TableCell>
+            <TableCell>{weight?.average.max}</TableCell>
+            <TableCell>{weight?.average.min}</TableCell>
+            <TableCell>{weight?.average.differance}</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </>

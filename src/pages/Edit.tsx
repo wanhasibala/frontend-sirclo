@@ -73,7 +73,7 @@ const Edit = () => {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Date</Label>
-                <Input id="date" type="date" value={date} readOnly />
+                <Input id="date" type="date" value={date} disabled />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="framework">Max Weight</Label>

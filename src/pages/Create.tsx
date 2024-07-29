@@ -96,7 +96,7 @@ export default function CardWithForm() {
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button variant="outline">
-              <Link to={".."}>Cancel</Link>
+              <Link to={"/"}>Cancel</Link>
             </Button>
             <Button type="button" onClick={onSubmit}>
               Create
