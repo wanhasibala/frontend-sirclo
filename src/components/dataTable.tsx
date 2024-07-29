@@ -30,11 +30,14 @@ type WeightResponse = {
 
 export const DataTable = () => {
   const [weight, setWeight] = useState<Array<Weight>>([]);
+  const [average, setAverage] = useState<Array<Weight>>([]);
   const fetchApi = async () => {
     const response = await axios("http://127.0.0.1:3000/api/v1/weight/");
     if (!response) return;
     const resWeight = response?.data?.body?.weight;
+    const resAverage = response?.data?.body?.average;
     setWeight(resWeight);
+    setAverage(resAverage);
   };
   useEffect(() => {
     fetchApi();
@@ -106,10 +109,7 @@ export const DataTable = () => {
               </TableRow>
             );
           })}
-          <TableRow>
-            <TableCell>average</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
+         
         </TableBody>
       </Table>
     </>

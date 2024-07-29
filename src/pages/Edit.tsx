@@ -24,6 +24,7 @@ const Edit = () => {
   const [date, setDate] = useState<string>();
   const [max, setMax] = useState<string>();
   const [min, setMin] = useState<string>();
+  const [error, setError] = useState<string>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +43,10 @@ const Edit = () => {
 
   const onSubmit = useCallback(async () => {
     if (!date || !max || !min) return;
-
+    if (parseFloat(max) <= parseFloat(min)) {
+      setError("Max weight cannot be lower than min weight");
+      return;
+    }
     await axios
       .put(`http://127.0.0.1:3000/api/v1/weight/${date}`, {
         max: Number(max),
@@ -90,8 +94,10 @@ const Edit = () => {
                 />
               </div>
             </div>
-            {/* )})} */}
+
+            {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
           </CardContent>
+
           <CardFooter className="flex justify-between">
             <Button variant="outline">
               <Link to={`/`}>Cancel</Link>

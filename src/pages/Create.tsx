@@ -9,18 +9,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function CardWithForm() {
   const [date, setDate] = useState<string>();
   const [max, setMax] = useState<string>();
   const [min, setMin] = useState<string>();
+  const [error, setError] = useState<string>();
   const navigate = useNavigate();
 
   const onSubmit = useCallback(async () => {
     if (!date || !max || !min) return;
-
+    if (parseFloat(max) <= parseFloat(min)) {
+      setError("Max weight cannot be lower than min weight");
+      return;
+    }
     await axios
       .post("http://127.0.0.1:3000/api/v1/weight", {
         date: date,
@@ -30,8 +34,13 @@ export default function CardWithForm() {
       .then(function () {
         navigate("/");
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
+        if (error.response && error.response.status === 400) {
+          setError(error.response.data.message); // Set error from backend
+        } else {
+          setError(error);
+        }
       });
   }, [date, max, min, axios]);
 
@@ -83,6 +92,7 @@ export default function CardWithForm() {
                 />
               </div>
             </div>
+            {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button variant="outline">
