@@ -9,7 +9,7 @@ import Create from "./pages/Create.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Router>
     <Routes>
-      <Route path="" element={<App />} />
+      <Route path="/" element={<App />} />
       <Route path="/detail/:id" element={<Detail />} />
       <Route path="/edit/:id" element={<Edit />} />
       <Route path="/create" element={<Create />} />
